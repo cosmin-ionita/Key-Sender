@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -8,6 +9,12 @@ namespace KeySender
 {
     class Program
     {
+        private static Process process;
+
+        private static readonly int KeyTimeout = 10;
+
+        private static readonly string ProcessName = "<Your Process Name>";
+
         [DllImport("User32.dll")]
         private static extern int SetForegroundWindow(IntPtr point);
 
@@ -19,57 +26,40 @@ namespace KeySender
 
         private static uint WM_KEYDOWN = 0x100, WM_KEYUP = 0x101, VM_CHAR = 0x0102;
 
-        private static Process powerShellProcess;
-
         private static void SendKey(IntPtr key)
         {
-            if (powerShellProcess.MainWindowHandle != IntPtr.Zero)
+            if (process.MainWindowHandle != IntPtr.Zero)
             {
-                SetForegroundWindow(powerShellProcess.MainWindowHandle);
+                SetForegroundWindow(process.MainWindowHandle);
 
-                PostMessage(powerShellProcess.MainWindowHandle, Program.WM_KEYDOWN, IntPtr.Zero, IntPtr.Zero);
+                PostMessage(process.MainWindowHandle, WM_KEYDOWN, IntPtr.Zero, IntPtr.Zero);
 
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(KeyTimeout);
 
-                PostMessage(powerShellProcess.MainWindowHandle, Program.VM_CHAR, key, IntPtr.Zero);
+                PostMessage(process.MainWindowHandle, VM_CHAR, key, IntPtr.Zero);
 
-                PostMessage(powerShellProcess.MainWindowHandle, Program.WM_KEYUP, IntPtr.Zero, IntPtr.Zero);
+                PostMessage(process.MainWindowHandle, WM_KEYUP, IntPtr.Zero, IntPtr.Zero);
             }
         }
 
         private static void SendEnter()
         {
-            if (powerShellProcess.MainWindowHandle != IntPtr.Zero)
+            if (process.MainWindowHandle != IntPtr.Zero)
             {
-                PostMessage(powerShellProcess.MainWindowHandle, WM_KEYDOWN, (IntPtr)0x0D, IntPtr.Zero);
+                PostMessage(process.MainWindowHandle, WM_KEYDOWN, (IntPtr)0x0D, IntPtr.Zero);
             }
         }
 
         static void Main(string[] args)
         {
-            try
-            {
-                var processes = Process.GetProcesses();
+            var message = "This message will be sent key by key to the process";
 
-                foreach (var proc in processes)
-                    if (proc.MainWindowTitle.Contains("qqq"))
-                    {
-                        powerShellProcess = proc;
-                        break;
-                    }
-                        
+            process = Process.GetProcesses().Where(u => u.ProcessName == ProcessName).First();
 
-                var message = "\"./RTM bat local\"";
+            foreach (var c in message)
+                SendKey((IntPtr)c);
 
-                foreach (var c in message)
-                    SendKey((IntPtr)c);
-
-                SendEnter();
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine("The process named `qqq` is not started.");
-            }
+            SendEnter();
         }
     }
 }

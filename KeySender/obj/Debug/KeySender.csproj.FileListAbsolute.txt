@@ -3,3 +3,6 @@ C:\Users\Cosmin\Desktop\KeySender\KeySender\KeySender\bin\Debug\KeySender.exe
 C:\Users\Cosmin\Desktop\KeySender\KeySender\KeySender\bin\Debug\KeySender.pdb
 C:\Users\Cosmin\Desktop\KeySender\KeySender\KeySender\obj\Debug\KeySender.exe
 C:\Users\Cosmin\Desktop\KeySender\KeySender\KeySender\obj\Debug\KeySender.pdb
+C:\Users\Cosmin\Desktop\KeySender\KeySender\KeySender-repository\KeySender\bin\Debug\KeySender.exe.config
+C:\Users\Cosmin\Desktop\KeySender\KeySender\KeySender-repository\KeySender\obj\Debug\KeySender.exe
+C:\Users\Cosmin\Desktop\KeySender\KeySender\KeySender-repository\KeySender\obj\Debug\KeySender.pdb
